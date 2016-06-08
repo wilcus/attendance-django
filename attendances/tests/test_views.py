@@ -16,22 +16,23 @@ class UnpackArgsRenderMixin:
 
 
 class TestRegisterPage(UnpackArgsRenderMixin):
-    @patch('attendances.views.Student')
+    @patch('attendances.views.StudentListForm')
     @patch('attendances.views.render')
-    def test_get_students_from_a_professor(self, mock_render, mock_Student, rf):
-        student = Mock(name="John")
-        mock_Student.objects.filter.return_value = [student]
+    def test_get_students_from_a_professor_and_course(self, mock_render, mock_StudentListForm, rf):
         request = rf.get('fake')
+        request.user = Mock()
+        mock_student_list_form = mock_StudentListForm.return_value
 
         register(request, ANY)
 
         context = self.context(mock_render.call_args)
-        assert student in context['students']
+        assert mock_student_list_form == context['form']
 
-    @patch('attendances.views.Student')
+    @patch('attendances.views.StudentListForm')
     @patch('attendances.views.render')
-    def test_register_page_use_register_template(self, mock_render, mock_Student, rf):
+    def test_register_page_use_register_template(self, mock_render, mock_StudentListForm, rf):
         request = rf.get('fake')
+        request.user = Mock()
 
         register(request, ANY)
 

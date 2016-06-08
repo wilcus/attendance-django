@@ -1,8 +1,10 @@
 from django.shortcuts import render
+from .models import Student
 
 
-def register(request):
-    return render(request, 'register.html')
+def register(request, profesor):
+    students = Student.objects.filter(profesor=profesor)
+    return render(request, 'register.html', {'students': students})
 
 
 def registered(request):

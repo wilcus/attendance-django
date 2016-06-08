@@ -1,11 +1,12 @@
 from base import FunctionalTest
 from register_attendance_student_page import RegisterStudentPage
 from list_student_page import ListStudentPage
+from django.test.utils import override_settings
 
 
 class AttendanceTest(FunctionalTest):
     # fixtures = ['pre_created_database.json']
-
+    @override_settings(DEBUG=True)
     def test_see_list_of_students_of_course(self):
         # Given a database with students enrolled to courses
         # I want to see the list of my students

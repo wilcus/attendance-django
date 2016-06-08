@@ -31,7 +31,6 @@ class TestRegisterPage(UnpackArgsRenderMixin):
     @patch('attendances.views.Student')
     @patch('attendances.views.render')
     def test_register_page_use_register_template(self, mock_render, mock_Student, rf):
-        mock_Student.objects.all.return_value = Mock()
         request = rf.get('fake')
 
         register(request, ANY)

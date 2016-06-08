@@ -1,10 +1,10 @@
 from django.shortcuts import render
-from .models import Student
+from .forms import StudentListForm
 
 
-def register(request, profesor):
-    students = Student.objects.filter(profesor=profesor)
-    return render(request, 'register.html', {'students': students})
+def register(request, course):
+    student_list_form = StudentListForm(course, request.user)
+    return render(request, 'register.html', {'form': student_list_form})
 
 
 def registered(request):

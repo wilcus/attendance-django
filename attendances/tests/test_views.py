@@ -16,7 +16,7 @@ class UnpackArgsRenderMixin:
 
 
 class TestRegisterPage(UnpackArgsRenderMixin):
-    @patch('attendances.views.StudentListForm')
+    @patch('attendances.views.RegisterStudentListForm')
     @patch('attendances.views.render')
     def test_get_students_from_a_professor_and_course(self, mock_render, mock_StudentListForm, rf):
         request = rf.get('fake')
@@ -28,7 +28,7 @@ class TestRegisterPage(UnpackArgsRenderMixin):
         context = self.context(mock_render.call_args)
         assert mock_student_list_form == context['form']
 
-    @patch('attendances.views.StudentListForm')
+    @patch('attendances.views.RegisterStudentListForm')
     @patch('attendances.views.render')
     def test_register_page_use_register_template(self, mock_render, mock_StudentListForm, rf):
         request = rf.get('fake')

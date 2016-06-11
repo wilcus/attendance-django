@@ -1,6 +1,5 @@
 from unittest.mock import Mock, patch, ANY
-from attendances.views import register
-from django.test import TestCase
+from attendances.views import register, registered
 
 
 class UnpackArgsRenderMixin:
@@ -39,8 +38,12 @@ class TestRegisterPage(UnpackArgsRenderMixin):
         template = self.template(mock_render.call_args)
         assert 'register.html' == template
 
+    @patch('attendances.views.render')
+    def test_registered_page_use_register_template(self, mock_render, rf):
+        request = rf.get('fake')
+        request.user = Mock()
 
-class TestRouting(TestCase):
-    def test_register_page_use_registered_template(self):
-        response = self.client.get('/attendances/registered')
-        self.assertTemplateUsed(response, 'registered.html')
+        registered(request, ANY)
+
+        template = self.template(mock_render.call_args)
+        assert 'registered.html' == template

@@ -3,5 +3,5 @@ from .views import register, registered
 
 urlpatterns = [
     url(r'^register/(\d+)$', register),
-    url(r'^registered$', registered),
+    url(r'^registered/(\d+)$', registered),
 ]

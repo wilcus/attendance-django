@@ -3,6 +3,11 @@ from register_attendance_student_page import RegisterStudentPage
 from list_student_page import ListStudentPage
 from django.test.utils import override_settings
 from attendances.models import Course, Student
+from django.contrib.auth import get_user_model, SESSION_KEY
+from django.contrib.sessions.backends.db import SessionStore
+from django.conf.global_settings import SESSION_COOKIE_NAME
+
+User = get_user_model()
 
 
 class AttendanceTest(FunctionalTest):
@@ -16,6 +21,17 @@ class AttendanceTest(FunctionalTest):
             Student.objects.create(name="michael")
         ]
         course.students.add(*students_of_course)
+        professor = User.objects.create(username="george")
+        course.professors.add(professor)
+        session = SessionStore()
+        session[SESSION_KEY] = professor.pk
+        session.save()
+        self.browser.get(self.live_server_url + "/fake/")
+        self.browser.add_cookie(dict(
+            name=SESSION_COOKIE_NAME,
+            value=session.session_key,
+            path='/',
+        ))
 
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
 

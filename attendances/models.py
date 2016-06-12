@@ -1,12 +1,15 @@
 from django.db import models
-
-
-class Course(models.Model):
-    name = models.CharField(max_length=100)
+from django.conf import settings
 
 
 class Student(models.Model):
     name = models.CharField(max_length=100)
+
+
+class Course(models.Model):
+    name = models.CharField(max_length=100)
+    students = models.ManyToManyField(Student)
+    professors = models.ManyToManyField(settings.AUTH_USER_MODEL)
 
 
 class Attendance(models.Model):

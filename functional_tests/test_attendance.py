@@ -27,4 +27,4 @@ class AttendanceTest(FunctionalTest):
         # I want to see the list of my students
         list_student_page.get("/attendances/registered/1")
         students_registered = list_student_page.students_registered
-        self.assertIn("John", students_registered)
+        self.assertIn("john", students_registered)

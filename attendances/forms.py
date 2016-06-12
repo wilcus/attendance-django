@@ -10,7 +10,8 @@ class RegisterStudentListForm(forms.Form):
         self.course = course
         self.fields['students'].queryset = Student.objects.filter(
             course=course,
-            professor=professor)
+            course__professors__pk__in=[professor.pk]
+        )
 
     def save(self):
         students = self.cleaned_data['students']

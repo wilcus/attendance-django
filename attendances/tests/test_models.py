@@ -5,12 +5,11 @@ import pytest
 User = get_user_model()
 
 
+@pytest.mark.django_db
 class TestStudent:
-    @pytest.mark.django_db
     def test_get_create_students(self):
         Student.objects.create(name="John")
 
-    @pytest.mark.django_db
     def test_get_courses_from_a_student(self):
         student = Student.objects.create(name="John")
         courses = [
@@ -22,16 +21,16 @@ class TestStudent:
         assert student.course_set.all().count() == len(courses)
 
 
+@pytest.mark.django_db
 class TestAttendance:
-    @pytest.mark.django_db
     def test_get_create_attendance(self):
         student = Student.objects.create(name="John")
         course = Course.objects.create(name="maths")
         Attendance.objects.create(student=student, course=course)
 
 
+@pytest.mark.django_db
 class TestCourse:
-    @pytest.mark.django_db
     def test_get_students_from_a_course(self):
         course = Course.objects.create(name="music")
         students_of_course = [
@@ -41,7 +40,6 @@ class TestCourse:
         course.students.add(*students_of_course)
         assert course.students.all().count() == len(students_of_course)
 
-    @pytest.mark.django_db
     def test_get_proffessor_from_a_course(self):
         course = Course.objects.create(name="music")
         students_of_course = [

@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth import get_user
 from .forms import RegisterStudentListForm
+from .models import Attendance
 
 
 def register(request, course):
@@ -11,5 +12,5 @@ def register(request, course):
 
 
 def registered(request, course):
-    students = []
+    students = Attendance.objects.filter(course=course, course__professors__in=[get_user(request)])
     return render(request, 'registered.html', {'students': students})

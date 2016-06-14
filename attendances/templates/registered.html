@@ -5,8 +5,10 @@
   <title></title>
 </head>
 <body>
-  <ul>
-    <li class="registered--item">John</li>
+  <ul class="registered">
+    {% for student in student %}
+      <li class="registered--item">{{ student.name }}</li>
+    {% endfor %}
   </ul>
 </body>
 </html>

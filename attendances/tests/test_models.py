@@ -20,6 +20,18 @@ class TestStudent:
             student.course_set.add(course)
         assert student.course_set.all().count() == len(courses)
 
+    def test_get_students_from_a_professor_and_course(self):
+        john = Student.objects.create(name="John")
+        professor = User.objects.create(username="Mark")
+        course = Course.objects.create(name="science")
+        course.professors.add(professor)
+        john.course_set.add(course)
+        students = Student.objects.filter(
+            course=course,
+            course__professors__in=[professor]
+        )
+        assert len(students) == 1
+
 
 @pytest.mark.django_db
 class TestAttendance:

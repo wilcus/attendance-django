@@ -3,9 +3,10 @@ from register_attendance_student_page import RegisterStudentPage
 from list_student_page import ListStudentPage
 from django.test.utils import override_settings
 from attendances.models import Course, Student
-from django.contrib.auth import get_user_model, SESSION_KEY
+from django.contrib.auth import get_user_model, SESSION_KEY, BACKEND_SESSION_KEY, HASH_SESSION_KEY
 from django.contrib.sessions.backends.db import SessionStore
 from django.conf.global_settings import SESSION_COOKIE_NAME
+from django.conf import settings
 
 User = get_user_model()
 
@@ -25,6 +26,8 @@ class AttendanceTest(FunctionalTest):
         course.professors.add(professor)
         session = SessionStore()
         session[SESSION_KEY] = professor.pk
+        session[BACKEND_SESSION_KEY] = settings.AUTHENTICATION_BACKENDS[0]
+        session[HASH_SESSION_KEY] = professor.get_session_auth_hash()
         session.save()
         self.browser.get(self.live_server_url + "/fake/")
         self.browser.add_cookie(dict(

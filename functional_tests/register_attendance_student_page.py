@@ -12,6 +12,7 @@ class RegisterStudentPage(PageObject):
         # </label>
         student_chekboxes = [checkbox for checkbox in self.checkboxes if checkbox.find_element_by_xpath("..").text == student]
         assert len(student_chekboxes) > 0, "student not found in checkboxes"
+        assert len(student_chekboxes) == 1, "many students found in checkboxes"
         student_chekbox = student_chekboxes[0]
         student_chekbox.click()
         self.submit_button.click()

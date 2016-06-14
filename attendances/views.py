@@ -4,13 +4,13 @@ from .forms import RegisterStudentListForm
 from .models import Attendance
 
 
-def register(request, course):
+def register(request, course_id):
     assert request.user.is_authenticated(), "user no authenticated"
 
-    student_list_form = RegisterStudentListForm(course=course, professor=get_user(request))
+    student_list_form = RegisterStudentListForm(course_id=course_id, professor=get_user(request))
     return render(request, 'register.html', {'form': student_list_form})
 
 
-def registered(request, course):
-    students = Attendance.objects.filter(course=course, course__professors__in=[get_user(request)])
+def registered(request, course_id):
+    students = Attendance.objects.filter(course__id=course_id, course__professors__in=[get_user(request)])
     return render(request, 'registered.html', {'students': students})

@@ -17,8 +17,10 @@ class AttendanceTest(FunctionalTest):
     def test_see_list_of_students_of_course(self):
         # Given a database with students enrolled to courses
         course = Course.objects.create(name="maths")
+        john = Student.objects.create(name="john")
+
         students_of_course = [
-            Student.objects.create(name="john"),
+            john,
             Student.objects.create(name="michael")
         ]
         course.students.add(*students_of_course)
@@ -40,10 +42,10 @@ class AttendanceTest(FunctionalTest):
 
         # I want to see the students avaible to register with course with id=1
         register_student_page.get("/attendances/register/1")
-        register_student_page.register("john")
+        register_student_page.register(john.name)
         list_student_page = ListStudentPage(self.browser, root_uri=self.live_server_url)
 
         # I want to see the list of my students
         list_student_page.get("/attendances/registered/1")
         students_registered = list_student_page.students_registered
-        self.assertIn("john", students_registered)
+        self.assertIn(john.name, students_registered)

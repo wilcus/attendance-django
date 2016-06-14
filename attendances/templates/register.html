@@ -5,9 +5,10 @@
   <title></title>
 </head>
 <body>
-  <form action="">
-    <label><input type="checkbox" value="John">John</label><br>
-    <input type="submit" value="Save" name="submit">
+  <form action="" method="post">
+      {% csrf_token %}
+      {{ form }}
+      <input type="submit" value="Submit" />
   </form>
 </body>
 </html>

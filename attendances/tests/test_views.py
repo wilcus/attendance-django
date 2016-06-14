@@ -42,12 +42,26 @@ class TestRegisterPage(UnpackArgsRenderMixin):
         template = self.template(mock_render.call_args)
         assert 'register.html' == template
 
+    @patch('attendances.views.get_user')
+    @patch('attendances.views.Attendance')
     @patch('attendances.views.render')
-    def test_registered_page_use_register_template(self, mock_render, rf):
+    def test_registered_use_registered_template(self, mock_render, mock_Attendance, mock_get_user, rf):
         request = rf.get('fake')
-        request.user = Mock()
+        mock_get_user.return_value = ANY
+        mock_Attendance.objects.filter.return_value = ANY
 
         registered(request, ANY)
 
         template = self.template(mock_render.call_args)
         assert 'registered.html' == template
+
+    @patch('attendances.views.get_user')
+    @patch('attendances.views.Attendance')
+    def test_registered_output_registered_students(self, mock_Attendance, mock_get_user, rf):
+        request = rf.get('fake')
+        mock_get_user.return_value = Mock()
+        mock_Attendance.objects.filter.return_value = ANY
+
+        registered(request, ANY)
+
+        assert mock_Attendance.objects.filter.call_count == 1

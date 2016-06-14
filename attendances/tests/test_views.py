@@ -1,4 +1,4 @@
-from unittest.mock import Mock, patch, ANY
+from unittest.mock import Mock, patch, ANY, MagicMock
 from attendances.views import register, registered
 
 
@@ -59,8 +59,8 @@ class TestRegisterPage(UnpackArgsRenderMixin):
     @patch('attendances.views.Attendance')
     def test_registered_output_registered_students(self, mock_Attendance, mock_get_user, rf):
         request = rf.get('fake')
-        mock_get_user.return_value = Mock()
-        mock_Attendance.objects.filter.return_value = ANY
+        mock_get_user.return_value = ANY
+        mock_Attendance.objects.filter.return_value = MagicMock()
 
         registered(request, ANY)
 

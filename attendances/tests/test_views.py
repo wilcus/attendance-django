@@ -18,7 +18,7 @@ class TestRegisterPage(UnpackArgsRenderMixin):
     @patch('attendances.views.get_user')
     @patch('attendances.views.RegisterStudentListForm')
     @patch('attendances.views.render')
-    def test_get_students_from_a_professor_and_course(self, mock_render, mock_StudentListForm, mock_get_user, rf):
+    def test_register_sends_form(self, mock_render, mock_StudentListForm, mock_get_user, rf):
         request = rf.get('fake')
         request.user = Mock()
         mock_get_user.return_value = ANY

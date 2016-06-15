@@ -1,16 +1,22 @@
 from django.shortcuts import render
 from django.contrib.auth import get_user
 from .forms import RegisterStudentListForm
-from .models import Attendance
+from .models import Student
 
 
 def register(request, course_id):
     assert request.user.is_authenticated(), "user no authenticated"
 
     student_list_form = RegisterStudentListForm(course_id=course_id, professor=get_user(request))
-    return render(request, 'register.html', {'form': student_list_form})
+    if request.method == 'POST':
+        student_list_form = RegisterStudentListForm(course_id=course_id, professor=get_user(request), data=request.POST)
+        if student_list_form.is_valid():
+            student_list_form.save()
+            return
+        return render(request, 'register.html', {'course_id': course_id, 'form': student_list_form})
+    return render(request, 'register.html', {'course_id': course_id, 'form': student_list_form})
 
 
 def registered(request, course_id):
-    students = Attendance.objects.filter(course__id=course_id, course__professors__in=[get_user(request)])
+    students = Student.objects.filter(attendance__course__id=course_id, attendance__course__professors__in=[get_user(request)])
     return render(request, 'registered.html', {'students': students})

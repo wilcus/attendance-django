@@ -12,7 +12,6 @@ User = get_user_model()
 
 
 class AttendanceTest(FunctionalTest):
-    # fixtures = ['pre_created_database.json']
     @override_settings(DEBUG=True)
     def test_see_list_of_students_of_course(self):
         # Given a database with students enrolled to courses

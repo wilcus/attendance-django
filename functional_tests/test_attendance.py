@@ -13,7 +13,7 @@ User = get_user_model()
 
 class AttendanceTest(FunctionalTest):
     @override_settings(DEBUG=True)
-    def test_see_list_of_students_of_course(self):
+    def test_see_list_of_registered_students_from_a_course(self):
         # Given a database with students enrolled to courses
         course = Course.objects.create(name="maths")
         john = Student.objects.create(name="john")

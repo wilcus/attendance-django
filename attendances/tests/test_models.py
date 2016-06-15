@@ -40,6 +40,11 @@ class TestAttendance:
         course = Course.objects.create(name="maths")
         Attendance.objects.create(student=student, course=course)
 
+    def test_get_create_attendance_with_id(self):
+        student = Student.objects.create(name="John")
+        course = Course.objects.create(name="maths")
+        Attendance.objects.create(course_id=course.id, student=student)
+
 
 @pytest.mark.django_db
 class TestCourse:

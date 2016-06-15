@@ -5,7 +5,7 @@
   <title></title>
 </head>
 <body>
-  <form action="" method="post">
+  <form action="{% url 'register' course_id %}" method="post">
       {% csrf_token %}
       {{ form }}
       <input type="submit" value="Submit" />

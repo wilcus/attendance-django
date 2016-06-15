@@ -32,6 +32,16 @@ class TestStudent:
         )
         assert len(students) == 1
 
+    def test_get_students_with_attendance(self):
+        john = Student.objects.create(name="John")
+        professor = User.objects.create(username="Mark")
+        course = Course.objects.create(name="science")
+        course.professors.add(professor)
+        john.course_set.add(course)
+        Attendance.objects.create(course=course, student=john)
+        students_with_attendance = Student.objects.filter(attendance__course_id=course.id, attendance__course__professors__in=[professor])
+        assert len(students_with_attendance) == 1
+
 
 @pytest.mark.django_db
 class TestAttendance:

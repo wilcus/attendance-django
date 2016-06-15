@@ -1,5 +1,6 @@
 from attendances.models import Student, Course, Attendance
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 import pytest
 
 User = get_user_model()
@@ -41,6 +42,14 @@ class TestStudent:
         Attendance.objects.create(course=course, student=john)
         students_with_attendance = Student.objects.filter(attendance__course_id=course.id, attendance__course__professors__in=[professor])
         assert len(students_with_attendance) == 1
+
+    def test_students_with_attendance_if_not_register_in_course(self):
+        john = Student.objects.create(name="John")
+        professor = User.objects.create(username="Mark")
+        course = Course.objects.create(name="science")
+        course.professors.add(professor)
+        with pytest.raises(ValidationError):
+            Attendance.objects.create(course=course, student=john)
 
 
 @pytest.mark.django_db

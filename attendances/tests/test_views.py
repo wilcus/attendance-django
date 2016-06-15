@@ -32,6 +32,20 @@ class TestRegisterPage(UnpackArgsRenderMixin):
     @patch('attendances.views.get_user')
     @patch('attendances.views.RegisterStudentListForm')
     @patch('attendances.views.render')
+    def test_register_sends_course_id(self, mock_render, mock_StudentListForm, mock_get_user, rf):
+        request = rf.get('fake')
+        request.user = Mock()
+        mock_get_user.return_value = ANY
+        course_id = 1
+
+        register(request, course_id)
+
+        context = self.context(mock_render.call_args)
+        assert course_id == context['course_id']
+
+    @patch('attendances.views.get_user')
+    @patch('attendances.views.RegisterStudentListForm')
+    @patch('attendances.views.render')
     def test_register_page_use_register_template(self, mock_render, mock_StudentListForm, mock_get_user, rf):
         request = rf.get('fake')
         mock_get_user.return_value = ANY

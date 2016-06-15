@@ -56,6 +56,32 @@ class TestRegisterPage(UnpackArgsRenderMixin):
         assert 'registered.html' == template
 
     @patch('attendances.views.get_user')
+    @patch('attendances.views.RegisterStudentListForm')
+    def test_register_call_save_of_form(self, mock_StudentListForm, mock_get_user, rf):
+        request = rf.post('fake')
+        request.user = Mock()
+        mock_get_user.return_value = ANY
+        mock_student_list_form = mock_StudentListForm.return_value
+        mock_student_list_form.is_valid.return_value = True
+
+        register(request, ANY)
+
+        assert mock_student_list_form.save.call_count == 1
+
+    @patch('attendances.views.get_user')
+    @patch('attendances.views.RegisterStudentListForm')
+    def test_register_dont_call_save_of_invalid_form(self, mock_StudentListForm, mock_get_user, rf):
+        request = rf.post('fake')
+        request.user = Mock()
+        mock_get_user.return_value = ANY
+        mock_student_list_form = mock_StudentListForm.return_value
+        mock_student_list_form.is_valid.return_value = False
+
+        register(request, ANY)
+
+        assert mock_student_list_form.save.call_count == 0
+
+    @patch('attendances.views.get_user')
     @patch('attendances.views.Attendance')
     def test_registered_output_registered_students(self, mock_Attendance, mock_get_user, rf):
         request = rf.get('fake')

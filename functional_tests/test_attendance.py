@@ -11,8 +11,8 @@ from django.conf import settings
 User = get_user_model()
 
 
+@override_settings(DEBUG=True)
 class AttendanceTest(FunctionalTest):
-    @override_settings(DEBUG=True)
     def test_see_list_of_registered_students_from_a_course(self):
         # Given a database with students enrolled to courses
         course = Course.objects.create(name="maths")

@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ValidationError
 
 
 class Student(models.Model):
@@ -18,3 +19,8 @@ class Course(models.Model):
 class Attendance(models.Model):
     course = models.ForeignKey(Course)
     student = models.ForeignKey(Student)
+
+    def save(self, *args, **kwargs):
+        if self.student not in self.course.students.all():
+            raise ValidationError("Can't register attendance of student not enrolled in course")
+        super().save(*args, **kwargs)

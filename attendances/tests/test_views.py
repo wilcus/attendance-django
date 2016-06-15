@@ -57,12 +57,12 @@ class TestRegisterPage(UnpackArgsRenderMixin):
         assert 'register.html' == template
 
     @patch('attendances.views.get_user')
-    @patch('attendances.views.Attendance')
+    @patch('attendances.views.Student')
     @patch('attendances.views.render')
-    def test_registered_use_registered_template(self, mock_render, mock_Attendance, mock_get_user, rf):
+    def test_registered_use_registered_template(self, mock_render, mock_Student, mock_get_user, rf):
         request = rf.get('fake')
         mock_get_user.return_value = ANY
-        mock_Attendance.objects.filter.return_value = ANY
+        mock_Student.objects.filter.return_value = ANY
 
         registered(request, ANY)
 
@@ -97,12 +97,12 @@ class TestRegisterPage(UnpackArgsRenderMixin):
         assert mock_student_list_form.save.call_count == 0
 
     @patch('attendances.views.get_user')
-    @patch('attendances.views.Attendance')
-    def test_registered_output_registered_students(self, mock_Attendance, mock_get_user, rf):
+    @patch('attendances.views.Student')
+    def test_registered_output_registered_students(self, mock_Student, mock_get_user, rf):
         request = rf.get('fake')
         mock_get_user.return_value = ANY
-        mock_Attendance.objects.filter.return_value = MagicMock()
+        mock_Student.objects.filter.return_value = MagicMock()
 
         registered(request, ANY)
 
-        assert mock_Attendance.objects.filter.call_count == 1
+        assert mock_Student.objects.filter.call_count == 1

@@ -16,4 +16,4 @@ class RegisterStudentListForm(forms.Form):
     def save(self):
         students = self.cleaned_data['students']
         for student in students:
-            Attendance.objects.create(course__id=self.course_id, student=student)
+            Attendance.objects.create(course_id=self.course_id, student=student)

@@ -119,3 +119,16 @@ class TestCoursesView(UnpackArgsRenderMixin):
 
         template = self.template(mock_render.call_args)
         assert 'courses.html' == template
+
+    @patch('attendances.views.Course')
+    @patch('attendances.views.get_user')
+    @patch('attendances.views.render')
+    def test_courses_view_output_courses(self, mock_render, mock_get_user, mock_Course, rf):
+        request = rf.get('fake')
+        request.user = Mock()
+        mock_get_user.return_value = ANY
+        mock_Course.return_value = ANY
+
+        courses(request)
+
+        assert mock_Course.objects.filter.call_count == 1

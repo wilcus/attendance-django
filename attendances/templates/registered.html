@@ -3,7 +3,9 @@
 {% block content %}
   <ul class="registered">
     {% for student in students %}
-      <li class="registered--item">{{ student.name }}</li>
+		<li class="registered--item">{{ student.name }}</li>
+	{% empty %}
+		<li>No students registered</li>
     {% endfor %}
   </ul>
 {% endblock content %}

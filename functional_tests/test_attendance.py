@@ -54,13 +54,16 @@ class AttendanceTest(FunctionalTest):
     def test_when_logged_go_to_course_list_page(self):
         # create a professor with courses
         course = Course.objects.create(name="maths")
-        professor = User.objects.create(username="george", password="superpass")
+        professor = User.objects.create(username="george")
+        password = "superpass"
+        professor.set_password(password)
+        professor.save()
         course.professors.add(professor)
 
         login_page = LoginPage(self.browser, root_uri=self.live_server_url)
         login_page.get("/login")
         login_page.username = professor.username
-        login_page.password = professor.password
+        login_page.password = password
         login_page.login.click()
 
         course_list_page = CourseListPage(self.browser, root_uri=self.live_server_url)

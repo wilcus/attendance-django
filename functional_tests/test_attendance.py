@@ -1,6 +1,8 @@
 from base import FunctionalTest
 from register_attendance_student_page import RegisterStudentPage
 from list_student_page import ListStudentPage
+from course_list_page import CourseListPage
+from login_page import LoginPage
 from django.test.utils import override_settings
 from attendances.models import Course, Student
 from django.contrib.auth import get_user_model, SESSION_KEY, BACKEND_SESSION_KEY, HASH_SESSION_KEY
@@ -48,6 +50,23 @@ class AttendanceTest(FunctionalTest):
         list_student_page.get("/attendances/registered/1")
         students_registered = list_student_page.students_registered
         self.assertIn(john.name, students_registered)
+
+    def test_when_logged_go_to_course_list_page(self):
+        # create a professor with courses
+        course = Course.objects.create(name="maths")
+        professor = User.objects.create(username="george", password="superpass")
+        course.professors.add(professor)
+
+        login_page = LoginPage(self.browser, root_uri=self.live_server_url)
+        login_page.get("/login")
+        login_page.username = professor.username
+        login_page.password = professor.password
+        login_page.login.click()
+
+        course_list_page = CourseListPage(self.browser, root_uri=self.live_server_url)
+        # do not us page.get because is redirecter in login
+        course_list = course_list_page.course_list
+        self.assertIn(course.name, course_list)
 
     def test_if_user_is_not_logged_and_want_register_page_go_to_login_page(self):
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)

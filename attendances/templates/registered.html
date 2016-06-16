@@ -1,14 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title></title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
   <ul class="registered">
     {% for student in students %}
       <li class="registered--item">{{ student.name }}</li>
     {% endfor %}
   </ul>
-</body>
-</html>
+{% endblock content %}

@@ -61,6 +61,7 @@ class TestRegisterPage(UnpackArgsRenderMixin):
     @patch('attendances.views.render')
     def test_registered_use_registered_template(self, mock_render, mock_Student, mock_get_user, rf):
         request = rf.get('fake')
+        request.user = Mock()
         mock_get_user.return_value = ANY
         mock_Student.objects.filter.return_value = ANY
 
@@ -100,6 +101,7 @@ class TestRegisterPage(UnpackArgsRenderMixin):
     @patch('attendances.views.Student')
     def test_registered_output_registered_students(self, mock_Student, mock_get_user, rf):
         request = rf.get('fake')
+        request.user = Mock()
         mock_get_user.return_value = ANY
         mock_Student.objects.filter.return_value = MagicMock()
 
@@ -114,7 +116,8 @@ class TestCoursesView(UnpackArgsRenderMixin):
     def test_courses_view_use_courses_template(self, mock_render, mock_get_user, rf):
         request = rf.get('fake')
         request.user = Mock()
-        mock_get_user.return_value = ANY
+        any_id = 1
+        mock_get_user.return_value = any_id
         courses(request)
 
         template = self.template(mock_render.call_args)

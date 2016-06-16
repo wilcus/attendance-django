@@ -48,3 +48,11 @@ class AttendanceTest(FunctionalTest):
         list_student_page.get("/attendances/registered/1")
         students_registered = list_student_page.students_registered
         self.assertIn(john.name, students_registered)
+
+    def test_if_user_is_not_logged_go_to_login_page(self):
+        register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
+
+        # I want to see the students avaible to register with course with id=1
+        register_student_page.get("/attendances/register/1")
+
+        self.assertEquals(len(self.browser.find_elements_by_id('id_username')), 1)

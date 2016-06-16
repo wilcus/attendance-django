@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from django.contrib.auth import get_user
+from django.contrib.auth.decorators import login_required
 from .forms import RegisterStudentListForm
 from .models import Student
 
 
+@login_required
 def register(request, course_id):
-    assert request.user.is_authenticated(), "user no authenticated"
-
     student_list_form = RegisterStudentListForm(course_id=course_id, professor=get_user(request))
     if request.method == 'POST':
         student_list_form = RegisterStudentListForm(course_id=course_id, professor=get_user(request), data=request.POST)

@@ -6,6 +6,8 @@
 		<li>
 			<a href="{% url 'register' course.pk %}">{{ course.name }}</a>
 		</li>
+	{% empty %}
+		<li>You have no courses</li>
     {% endfor %}
   </ul>
 {% endblock content %}

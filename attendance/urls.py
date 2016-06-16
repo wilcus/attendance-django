@@ -19,5 +19,6 @@ from django.conf.urls import include
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^login/$', 'django.contrib.auth.views.login', name='login', kwargs={'template_name': 'login.html'}),
     url(r'^attendances/', include('attendances.urls')),
 ]

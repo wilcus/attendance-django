@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth import get_user
 from django.contrib.auth.decorators import login_required
 from .forms import RegisterStudentListForm
-from .models import Student
+from .models import Student, Course
 
 
 @login_required
@@ -25,5 +25,5 @@ def registered(request, course_id):
 
 @login_required
 def courses(request):
-    courses = []
+    courses = Course.objects.filter(professors__in=[get_user(request)])
     return render(request, 'courses.html', {'courses': courses})

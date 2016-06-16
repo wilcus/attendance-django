@@ -1,5 +1,5 @@
 from unittest.mock import Mock, patch, ANY, MagicMock
-from attendances.views import register, registered
+from attendances.views import register, registered, courses
 
 
 class UnpackArgsRenderMixin:
@@ -106,3 +106,16 @@ class TestRegisterPage(UnpackArgsRenderMixin):
         registered(request, ANY)
 
         assert mock_Student.objects.filter.call_count == 1
+
+
+class TestCoursesView(UnpackArgsRenderMixin):
+    @patch('attendances.views.get_user')
+    @patch('attendances.views.render')
+    def test_courses_view_use_courses_template(self, mock_render, mock_get_user, rf):
+        request = rf.get('fake')
+        request.user = Mock()
+        mock_get_user.return_value = ANY
+        courses(request)
+
+        template = self.template(mock_render.call_args)
+        assert 'courses.html' == template

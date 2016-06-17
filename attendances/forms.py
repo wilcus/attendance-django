@@ -12,6 +12,11 @@ class RegisterStudentListForm(forms.Form):
             course__id=course_id,
             course__professors__in=[professor]
         )
+        students_already_registered = Student.objects.filter(
+            attendance__course_id=course_id,
+            attendance__course__professors__in=[professor]
+        )
+        self.fields['students'].initial = [student.pk for student in students_already_registered]
 
     def save(self):
         students = self.cleaned_data['students']

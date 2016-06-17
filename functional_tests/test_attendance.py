@@ -42,12 +42,12 @@ class AttendanceTest(FunctionalTest):
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
 
         # I want to see the students avaible to register with course with id=1
-        register_student_page.get("/attendances/register/1")
+        register_student_page.get("/attendances/register/{0}".format(course.pk))
         register_student_page.register(john.name)
         list_student_page = ListStudentPage(self.browser, root_uri=self.live_server_url)
 
         # I want to see the list of my students
-        list_student_page.get("/attendances/registered/1")
+        list_student_page.get("/attendances/registered/{0}".format(course.pk))
         students_registered = list_student_page.students_registered
         self.assertIn(john.name, students_registered)
 
@@ -108,7 +108,8 @@ class AttendanceTest(FunctionalTest):
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
 
         # I want to see the students avaible to register with course with id=1
-        register_student_page.get("/attendances/register/1")
+        fake_course_id = 1
+        register_student_page.get("/attendances/register/{0}".format(fake_course_id))
 
         self.assertEquals(len(self.browser.find_elements_by_id('id_username')), 1)
 
@@ -116,6 +117,7 @@ class AttendanceTest(FunctionalTest):
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
 
         # I want to see the students avaible to register with course with id=1
-        register_student_page.get("/attendances/registered/1")
+        fake_course_id = 1
+        register_student_page.get("/attendances/register/{0}".format(fake_course_id))
 
         self.assertEquals(len(self.browser.find_elements_by_id('id_username')), 1)

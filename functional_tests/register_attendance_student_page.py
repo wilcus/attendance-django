@@ -5,6 +5,11 @@ class RegisterStudentPage(PageObject):
     checkboxes = MultiPageElement(xpath="//input[@type='checkbox']")
     checked_checkboxes = MultiPageElement(css="input:checked[type='checkbox']")
     submit_button = PageElement(css="input[type='submit']")
+    success_message_element = PageElement(css=".info")
+
+    @property
+    def success_message(self):
+        return self.success_message_element.text
 
     @property
     def checked_students(self):

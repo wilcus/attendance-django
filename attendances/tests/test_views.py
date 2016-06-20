@@ -70,16 +70,18 @@ class TestRegisterPage(UnpackArgsRenderMixin):
         template = self.template(mock_render.call_args)
         assert 'registered.html' == template
 
+    @patch('attendances.views.messages')
     @patch('attendances.views.get_user')
     @patch('attendances.views.RegisterStudentListForm')
-    def test_register_call_save_of_valid_form(self, mock_StudentListForm, mock_get_user, rf):
+    def test_register_call_save_of_valid_form(self, mock_StudentListForm, mock_get_user, mock_messages, rf):
         request = rf.post('fake')
         request.user = Mock()
         mock_get_user.return_value = ANY
         mock_student_list_form = mock_StudentListForm.return_value
         mock_student_list_form.is_valid.return_value = True
+        any_course_id = 1
 
-        register(request, ANY)
+        register(request, any_course_id)
 
         assert mock_student_list_form.save.call_count == 1
 

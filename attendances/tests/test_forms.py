@@ -14,6 +14,7 @@ class TestForms:
         student_list_form.cleaned_data = {}
         students_to_register = [Mock(pk=1, name="john"), Mock(pk=2, name="michael")]
         student_list_form.cleaned_data['students'] = students_to_register
+        mock_Attendance.objects.filter.return_value.exists.return_value = False
 
         student_list_form.save()
 

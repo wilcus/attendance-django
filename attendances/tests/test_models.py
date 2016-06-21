@@ -1,6 +1,7 @@
 from attendances.models import Student, Course, Attendance
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+import datetime
 import pytest
 
 User = get_user_model()
@@ -42,6 +43,21 @@ class TestStudent:
         Attendance.objects.create(course=course, student=john)
         students_with_attendance = Student.objects.filter(attendance__course_id=course.id, attendance__course__professors__in=[professor])
         assert len(students_with_attendance) == 1
+
+    def test_get_students_with_attendance_in_a_date(self):
+        john = Student.objects.create(name="John")
+        professor = User.objects.create(username="Mark")
+        course = Course.objects.create(name="science")
+        course.professors.add(professor)
+        john.course_set.add(course)
+        attendance = Attendance.objects.create(course=course, student=john, date=datetime.date.today())
+        day_after_tomorrow = attendance.date + datetime.timedelta(days=2)
+        students_with_attendance = Student.objects.filter(
+            attendance__course_id=course.id,
+            attendance__course__professors__in=[professor],
+            attendance__date=day_after_tomorrow
+        )
+        assert len(students_with_attendance) == 0
 
     def test_students_with_attendance_if_not_register_in_course(self):
         john = Student.objects.create(name="John")

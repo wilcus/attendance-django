@@ -19,6 +19,7 @@ class Course(models.Model):
 class Attendance(models.Model):
     course = models.ForeignKey(Course)
     student = models.ForeignKey(Student)
+    date = models.DateField(auto_now=True)
 
     def save(self, *args, **kwargs):
         if self.student not in self.course.students.all():

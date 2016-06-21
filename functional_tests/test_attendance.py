@@ -89,7 +89,6 @@ class AttendanceTest(FunctionalTest):
         Attendance.objects.create(course=course, student=john)
 
         self.create_preauthenticated_session_for(professor)
-
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
 
         # I want to see john student is checked in form
@@ -113,14 +112,14 @@ class AttendanceTest(FunctionalTest):
         login_page.login.click()
 
         course_list_page = CourseListPage(self.browser, root_uri=self.live_server_url)
-        # do not us page.get because is redirecter in login
+        # do not use page.get because is redirected in login
         course_list = course_list_page.course_list
         self.assertIn(course.name, course_list)
 
     def test_if_user_is_not_logged_and_want_register_page_go_to_login_page(self):
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
 
-        # I want to see the students avaible to register with course with id=1
+        # I want to see the students avaiable to register with course with id=1
         fake_course_id = 1
         register_student_page.get("/attendances/register/{0}".format(fake_course_id))
 

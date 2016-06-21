@@ -16,22 +16,11 @@ User = get_user_model()
 
 @override_settings(DEBUG=True)
 class AttendanceTest(FunctionalTest):
-    def test_see_list_of_registered_students_from_a_course(self):
-        # Given a database with students enrolled to courses
-        course = Course.objects.create(name="maths")
-        john = Student.objects.create(name="john")
-
-        students_of_course = [
-            john,
-            Student.objects.create(name="michael")
-        ]
-        course.students.add(*students_of_course)
-        professor = User.objects.create(username="george")
-        course.professors.add(professor)
+    def create_preauthenticated_session_for(self, user):
         session = SessionStore()
-        session[SESSION_KEY] = professor.pk
+        session[SESSION_KEY] = user.pk
         session[BACKEND_SESSION_KEY] = settings.AUTHENTICATION_BACKENDS[0]
-        session[HASH_SESSION_KEY] = professor.get_session_auth_hash()
+        session[HASH_SESSION_KEY] = user.get_session_auth_hash()
         session.save()
         self.browser.get(self.live_server_url + "/fake/")
         self.browser.add_cookie(dict(
@@ -39,6 +28,20 @@ class AttendanceTest(FunctionalTest):
             value=session.session_key,
             path='/',
         ))
+
+    def test_see_list_of_registered_students_from_a_course(self):
+        # Given a database with students enrolled to courses
+        course = Course.objects.create(name="maths")
+        john = Student.objects.create(name="john")
+        students_of_course = [
+            john,
+            Student.objects.create(name="michael")
+        ]
+        course.students.add(*students_of_course)
+        professor = User.objects.create(username="george")
+        course.professors.add(professor)
+
+        self.create_preauthenticated_session_for(professor)
 
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
 
@@ -56,7 +59,6 @@ class AttendanceTest(FunctionalTest):
         # Given a database with students enrolled to courses
         course = Course.objects.create(name="maths")
         john = Student.objects.create(name="john")
-
         students_of_course = [
             john,
             Student.objects.create(name="michael")
@@ -64,18 +66,8 @@ class AttendanceTest(FunctionalTest):
         course.students.add(*students_of_course)
         professor = User.objects.create(username="george")
         course.professors.add(professor)
-        session = SessionStore()
-        session[SESSION_KEY] = professor.pk
-        session[BACKEND_SESSION_KEY] = settings.AUTHENTICATION_BACKENDS[0]
-        session[HASH_SESSION_KEY] = professor.get_session_auth_hash()
-        session.save()
-        self.browser.get(self.live_server_url + "/fake/")
-        self.browser.add_cookie(dict(
-            name=SESSION_COOKIE_NAME,
-            value=session.session_key,
-            path='/',
-        ))
 
+        self.create_preauthenticated_session_for(professor)
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
 
         # I want to see the students avaible to register with course with id=1
@@ -87,7 +79,6 @@ class AttendanceTest(FunctionalTest):
         # Given a database with students enrolled to courses
         course = Course.objects.create(name="maths")
         john = Student.objects.create(name="john")
-
         students_of_course = [
             john,
             Student.objects.create(name="michael")
@@ -97,17 +88,7 @@ class AttendanceTest(FunctionalTest):
         course.professors.add(professor)
         Attendance.objects.create(course=course, student=john)
 
-        session = SessionStore()
-        session[SESSION_KEY] = professor.pk
-        session[BACKEND_SESSION_KEY] = settings.AUTHENTICATION_BACKENDS[0]
-        session[HASH_SESSION_KEY] = professor.get_session_auth_hash()
-        session.save()
-        self.browser.get(self.live_server_url + "/fake/")
-        self.browser.add_cookie(dict(
-            name=SESSION_COOKIE_NAME,
-            value=session.session_key,
-            path='/',
-        ))
+        self.create_preauthenticated_session_for(professor)
 
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
 

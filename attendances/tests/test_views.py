@@ -109,7 +109,7 @@ class TestRegisteredPage(UnpackArgsRenderMixin):
         mock_get_user.return_value = ANY
         mock_Student.objects.filter.return_value = MagicMock()
 
-        registered(request, ANY)
+        registered(request, ANY, ANY)
 
         assert mock_Student.objects.filter.call_count == 1
 
@@ -122,7 +122,7 @@ class TestRegisteredPage(UnpackArgsRenderMixin):
         mock_get_user.return_value = ANY
         mock_Student.objects.filter.return_value = ANY
 
-        registered(request, ANY)
+        registered(request, ANY, ANY)
 
         template = self.template(mock_render.call_args)
         assert 'registered.html' == template

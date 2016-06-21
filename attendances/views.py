@@ -21,8 +21,12 @@ def register(request, course_id):
 
 
 @login_required
-def registered(request, course_id):
-    students = Student.objects.filter(attendance__course__id=course_id, attendance__course__professors__in=[get_user(request)])
+def registered(request, course_id, date):
+    students = Student.objects.filter(
+        attendance__course__id=course_id,
+        attendance__course__professors__in=[get_user(request)],
+        attendance__date=date
+    )
     return render(request, 'registered.html', {'students': students})
 
 

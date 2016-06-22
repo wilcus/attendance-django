@@ -1,5 +1,5 @@
 from django import forms
-import datetime
+from django.utils import timezone
 from .models import Student, Attendance
 
 
@@ -15,7 +15,8 @@ class RegisterStudentListForm(forms.Form):
         )
         students_already_registered = Student.objects.filter(
             attendance__course_id=course_id,
-            attendance__course__professors__in=[professor]
+            attendance__course__professors__in=[professor],
+            attendance__date=timezone.now()
         )
         self.fields['students'].initial = [student.pk for student in students_already_registered]
 
@@ -25,6 +26,6 @@ class RegisterStudentListForm(forms.Form):
             if not Attendance.objects.filter(course_id=self.course_id, student=student).exists():
                 Attendance.objects.create(course_id=self.course_id, student=student)
         for pk in self.fields['students'].initial:
-            attendance = Attendance.objects.filter(course_id=self.course_id, student_id=pk, date=datetime.date.today())
+            attendance = Attendance.objects.filter(course_id=self.course_id, student_id=pk, date=timezone.now())
             if attendance.exists():
                 attendance.delete()

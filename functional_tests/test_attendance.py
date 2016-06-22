@@ -54,7 +54,7 @@ class AttendanceTest(FunctionalTest):
         list_student_page = ListStudentPage(self.browser, root_uri=self.live_server_url)
 
         # I want to see the list of my students
-        attendance = Attendance.objects.get(pk=1)
+        attendance = Attendance.objects.all()[0]
         list_student_page.get("/attendances/registered/{0}/{1:%Y-%m-%d}".format(course.pk, attendance.date))
         students_registered = list_student_page.students_registered
         self.assertIn(john.name, students_registered)

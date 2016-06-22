@@ -10,6 +10,7 @@ from django.contrib.auth import get_user_model, SESSION_KEY, BACKEND_SESSION_KEY
 from django.contrib.sessions.backends.db import SessionStore
 from django.conf.global_settings import SESSION_COOKIE_NAME
 from django.conf import settings
+from django.utils import timezone
 import datetime
 
 User = get_user_model()
@@ -111,7 +112,7 @@ class AttendanceTest(FunctionalTest):
         course.students.add(*students_of_course)
         professor = User.objects.create(username="george")
         course.professors.add(professor)
-        before_two_days_date = datetime.date.today() - datetime.timedelta(days=2)
+        before_two_days_date = timezone.now() - datetime.timedelta(days=2)
         attendance = Attendance.objects.create(course=course, student=john)
         Attendance.objects.filter(pk=attendance.pk).update(date=before_two_days_date)
 

@@ -47,7 +47,8 @@ class AttendanceTest(FunctionalTest):
 
         # I want to see the students avaible to register with course with id=1
         register_student_page.get("/attendances/register/{0}".format(course.pk))
-        register_student_page.register(john.name)
+        register_student_page.toggle_check(john.name)
+        register_student_page.submit_button.click()
         list_student_page = ListStudentPage(self.browser, root_uri=self.live_server_url)
 
         # I want to see the list of my students
@@ -73,7 +74,8 @@ class AttendanceTest(FunctionalTest):
 
         # I want to see the students avaible to register with course with id=1
         register_student_page.get("/attendances/register/{0}".format(course.pk))
-        register_student_page.register(john.name)
+        register_student_page.toggle_check(john.name)
+        register_student_page.submit_button.click()
         self.assertEquals(register_student_page.success_message, SUCCESS_MESSAGE)
 
     def test_see_list_of_registered_students_in_form(self):

@@ -50,7 +50,7 @@ class TestStudent:
         course = Course.objects.create(name="science")
         course.professors.add(professor)
         john.course_set.add(course)
-        attendance = Attendance.objects.create(course=course, student=john, date=datetime.date.today())
+        attendance = Attendance.objects.create(course=course, student=john)
         day_after_tomorrow = attendance.date + datetime.timedelta(days=2)
         students_with_attendance = Student.objects.filter(
             attendance__course_id=course.id,

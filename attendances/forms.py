@@ -4,7 +4,7 @@ from .models import Student, Attendance
 
 
 class RegisterStudentListForm(forms.Form):
-    students = forms.ModelMultipleChoiceField(queryset=None, widget=forms.CheckboxSelectMultiple())
+    students = forms.ModelMultipleChoiceField(queryset=None, widget=forms.CheckboxSelectMultiple(), required=False)
 
     def __init__(self, course_id, professor, *args, **kwargs):
         super().__init__(*args, **kwargs)

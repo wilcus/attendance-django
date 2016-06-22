@@ -14,7 +14,6 @@ class RegisterStudentPage(PageObject):
     @property
     def checked_students(self):
         checked_students = [checked_checkbox.find_element_by_xpath("..").text for checked_checkbox in self.checked_checkboxes]
-        assert len(checked_students) > 0, "none students checked"
         return checked_students
 
     def toggle_check(self, student):

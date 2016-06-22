@@ -10,6 +10,7 @@ from django.contrib.auth import get_user_model, SESSION_KEY, BACKEND_SESSION_KEY
 from django.contrib.sessions.backends.db import SessionStore
 from django.conf.global_settings import SESSION_COOKIE_NAME
 from django.conf import settings
+import datetime
 
 User = get_user_model()
 
@@ -98,6 +99,29 @@ class AttendanceTest(FunctionalTest):
         register_student_page.get("/attendances/register/{0}".format(course.pk))
         checked_students = register_student_page.checked_students
         self.assertIn(john.name, checked_students)
+
+    def test_not_see_list_of_registered_students_in_form_if_student_was_registered_2_days_before(self):
+        # Given a database with students enrolled to courses
+        course = Course.objects.create(name="maths")
+        john = Student.objects.create(name="john")
+        students_of_course = [
+            john,
+            Student.objects.create(name="michael")
+        ]
+        course.students.add(*students_of_course)
+        professor = User.objects.create(username="george")
+        course.professors.add(professor)
+        before_two_days_date = datetime.date.today() - datetime.timedelta(days=2)
+        attendance = Attendance.objects.create(course=course, student=john)
+        Attendance.objects.filter(pk=attendance.pk).update(date=before_two_days_date)
+
+        self.create_preauthenticated_session_for(professor)
+        register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
+
+        # I don't want to see john student is checked in form
+        register_student_page.get("/attendances/register/{0}".format(course.pk))
+        checked_students = register_student_page.checked_students
+        self.assertNotIn(john.name, checked_students)
 
     def test_uncheck_student_in_form_this_should_not_appear_in_list_of_registered_students(self):
         # Given a database with students enrolled to courses

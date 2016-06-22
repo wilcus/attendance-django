@@ -124,7 +124,7 @@ class AttendanceTest(FunctionalTest):
         checked_students = register_student_page.checked_students
         self.assertNotIn(john.name, checked_students)
 
-    def test_uncheck_student_in_form_this_should_not_appear_in_list_of_registered_students(self):
+    def test_uncheck_student_in_form_should_not_appear_in_list_of_registered_students(self):
         # Given a database with students enrolled to courses
         course = Course.objects.create(name="maths")
         john = Student.objects.create(name="john")

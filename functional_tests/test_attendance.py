@@ -99,6 +99,30 @@ class AttendanceTest(FunctionalTest):
         checked_students = register_student_page.checked_students
         self.assertIn(john.name, checked_students)
 
+    def test_uncheck_student_in_form_this_should_not_appear_in_list_of_registered_students(self):
+        # Given a database with students enrolled to courses
+        course = Course.objects.create(name="maths")
+        john = Student.objects.create(name="john")
+        students_of_course = [
+            john,
+            Student.objects.create(name="michael")
+        ]
+        course.students.add(*students_of_course)
+        professor = User.objects.create(username="george")
+        course.professors.add(professor)
+        attendance = Attendance.objects.create(course=course, student=john)
+
+        self.create_preauthenticated_session_for(professor)
+        register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
+        register_student_page.get("/attendances/register/{0}".format(course.pk))
+        register_student_page.toggle_check(john.name)
+        register_student_page.submit_button.click()
+        list_student_page = ListStudentPage(self.browser, root_uri=self.live_server_url)
+
+        list_student_page.get("/attendances/registered/{0}/{1:%Y-%m-%d}".format(course.pk, attendance.date))
+        students_registered = list_student_page.students_registered
+        self.assertNotIn(john.name, students_registered)
+
     def test_when_logged_go_to_course_list_page(self):
         # create a professor with courses
         course = Course.objects.create(name="maths")

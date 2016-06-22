@@ -32,3 +32,17 @@ class TestForms:
         student_list_form.save()
 
         assert mock_Attendance.objects.create.call_count == 0
+
+    @patch('attendances.forms.Attendance')
+    @patch('attendances.forms.Student')
+    def test_if_student_is_unchecked_and_is_registered_then_delete_attendance(self, mock_Student, mock_Attendance):
+        student_registered = Mock(pk=1, name="john")
+        student_list_form = RegisterStudentListForm(course_id=ANY, professor=ANY)
+        student_list_form.cleaned_data = {}
+        student_list_form.fields['students'].initial = [student_registered.pk]
+        student_list_form.cleaned_data['students'] = []
+        mock_Attendance.objects.filter.return_value = student_registered
+
+        student_list_form.save()
+
+        assert student_registered.delete.call_count == 1

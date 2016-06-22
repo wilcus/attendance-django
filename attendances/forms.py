@@ -1,4 +1,5 @@
 from django import forms
+import datetime
 from .models import Student, Attendance
 
 
@@ -23,3 +24,7 @@ class RegisterStudentListForm(forms.Form):
         for student in students:
             if not Attendance.objects.filter(course_id=self.course_id, student=student).exists():
                 Attendance.objects.create(course_id=self.course_id, student=student)
+        for pk in self.fields['students'].initial:
+            attendance = Attendance.objects.filter(course_id=self.course_id, student_id=pk, date=datetime.date.today())
+            if attendance.exists():
+                attendance.delete()

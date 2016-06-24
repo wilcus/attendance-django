@@ -1,13 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-  {% if not FINISHED_COURSE_MESSAGE %}
+  {% if FINISHED_COURSE_MESSAGE or NOT_STARTED_COURSE_MESSAGE %}
+
+    {% if FINISHED_COURSE_MESSAGE %}
+      <h3 class="finished-course-message">{{ FINISHED_COURSE_MESSAGE }}</h3>
+    {% endif %}
+
+    {% if NOT_STARTED_COURSE_MESSAGE %}
+      <h3 class="not-started-course-message">{{ NOT_STARTED_COURSE_MESSAGE }}</h3>
+    {% endif %}
+
+  {% else %}
     <form action="{% url 'register' course_id %}" method="post">
         {% csrf_token %}
         {{ form }}
         <input type="submit" value="Submit" />
     </form>
-  {% else %}
-    <h3 class="finished-course-message">{{ FINISHED_COURSE_MESSAGE }}</h3>
   {% endif %}
 {% endblock content %}

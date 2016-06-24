@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from django.utils import timezone
 
 from .forms import RegisterStudentListForm
 from .models import Attendance, Course, Student
@@ -10,6 +11,17 @@ SUCCESS_MESSAGE = "You saved succesfully the attendances"
 FINISHED_COURSE_MESSAGE = "This course is finished"
 
 
+def course_active(function):
+    def wrapper(request, course_id):
+        course = Course.objects.get(pk=course_id)
+        if course.finish_date >= timezone.now().date():
+            return function(request, course_id)
+        else:
+            return render(request, 'register.html', {'FINISHED_COURSE_MESSAGE': FINISHED_COURSE_MESSAGE})
+    return wrapper
+
+
+@course_active
 @login_required
 def register(request, course_id):
     student_list_form = RegisterStudentListForm(course_id=course_id, professor=get_user(request))

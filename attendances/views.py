@@ -9,6 +9,7 @@ from .models import Attendance, Course, Student
 
 SUCCESS_MESSAGE = "You saved succesfully the attendances"
 FINISHED_COURSE_MESSAGE = "This course is finished"
+NOT_STARTED_COURSE_MESSAGE = "This course is not started"
 
 
 def course_active(function):

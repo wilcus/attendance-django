@@ -14,6 +14,8 @@ class Course(models.Model):
     name = models.CharField(max_length=100)
     students = models.ManyToManyField(Student)
     professors = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    start_date = models.DateField()
+    finish_date = models.DateField()
 
 
 class Attendance(models.Model):

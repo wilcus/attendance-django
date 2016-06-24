@@ -24,11 +24,13 @@ class UnpackArgsRenderMixin:
 @patch('attendances.views.RegisterStudentListForm')
 @patch('attendances.views.render')
 class TestRegisterPage(UnpackArgsRenderMixin):
-    def test_register_sends_form(self, mock_render, mock_StudentListForm, mock_get_user, rf):
+    def test_register_sends_form(self, mock_render, mock_StudentListForm, mock_get_user, mock_Course, rf):
         request = rf.get('fake')
         request.user = Mock()
         mock_get_user.return_value = ANY
         mock_student_list_form = mock_StudentListForm.return_value
+        mock_course = mock_Course.objects.get.return_value
+        mock_course.finish_date = timezone.now().date()
 
         register(request, ANY)
 
@@ -47,21 +49,25 @@ class TestRegisterPage(UnpackArgsRenderMixin):
         context = self.context(mock_render.call_args)
         assert FINISHED_COURSE_MESSAGE == context['FINISHED_COURSE_MESSAGE']
 
-    def test_register_sends_course_id(self, mock_render, mock_StudentListForm, mock_get_user, rf):
+    def test_register_sends_course_id(self, mock_render, mock_StudentListForm, mock_get_user, mock_Course, rf):
         request = rf.get('fake')
         request.user = Mock()
         mock_get_user.return_value = ANY
         course_id = 1
+        mock_course = mock_Course.objects.get.return_value
+        mock_course.finish_date = timezone.now().date()
 
         register(request, course_id)
 
         context = self.context(mock_render.call_args)
         assert course_id == context['course_id']
 
-    def test_register_page_use_register_template(self, mock_render, mock_StudentListForm, mock_get_user, rf):
+    def test_register_page_use_register_template(self, mock_render, mock_StudentListForm, mock_get_user, mock_Course, rf):
         request = rf.get('fake')
         mock_get_user.return_value = ANY
         request.user = Mock()
+        mock_course = mock_Course.objects.get.return_value
+        mock_course.finish_date = timezone.now().date()
 
         register(request, ANY)
 
@@ -69,35 +75,41 @@ class TestRegisterPage(UnpackArgsRenderMixin):
         assert 'register.html' == template
 
     @patch('attendances.views.messages')
-    def test_register_call_save_of_valid_form(self, mock_messages, mock_render, mock_StudentListForm, mock_get_user, rf):
+    def test_register_call_save_of_valid_form(self, mock_messages, mock_render, mock_StudentListForm, mock_get_user, mock_Course, rf):
         request = rf.post('fake')
         request.user = Mock()
         mock_get_user.return_value = ANY
         mock_student_list_form = mock_StudentListForm.return_value
         mock_student_list_form.is_valid.return_value = True
+        mock_course = mock_Course.objects.get.return_value
+        mock_course.finish_date = timezone.now().date()
 
         register(request, ANY)
 
         assert mock_student_list_form.save.call_count == 1
 
-    def test_register_dont_call_save_of_invalid_form(self, mock_render, mock_StudentListForm, mock_get_user, rf):
+    def test_register_dont_call_save_of_invalid_form(self, mock_render, mock_StudentListForm, mock_get_user, mock_Course, rf):
         request = rf.post('fake')
         request.user = Mock()
         mock_get_user.return_value = ANY
         mock_student_list_form = mock_StudentListForm.return_value
         mock_student_list_form.is_valid.return_value = False
+        mock_course = mock_Course.objects.get.return_value
+        mock_course.finish_date = timezone.now().date()
 
         register(request, ANY)
 
         assert mock_student_list_form.save.call_count == 0
 
     @patch('attendances.views.messages')
-    def test_register_call_add_message_in_valid_form(self, mock_messages, mock_render, mock_StudentListForm, mock_get_user, rf):
+    def test_register_call_add_message_in_valid_form(self, mock_messages, mock_render, mock_StudentListForm, mock_get_user, mock_Course, rf):
         request = rf.post('fake')
         request.user = Mock()
         mock_get_user.return_value = ANY
         mock_student_list_form = mock_StudentListForm.return_value
         mock_student_list_form.is_valid.return_value = True
+        mock_course = mock_Course.objects.get.return_value
+        mock_course.finish_date = timezone.now().date()
 
         register(request, ANY)
 

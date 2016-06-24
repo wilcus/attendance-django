@@ -1,4 +1,4 @@
-from page_objects import PageObject, PageElement
+from page_objects import PageElement, PageObject
 
 
 class LoginPage(PageObject):

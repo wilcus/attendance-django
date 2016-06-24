@@ -1,5 +1,6 @@
+from unittest.mock import ANY, Mock, patch
+
 from attendances.forms import RegisterStudentListForm
-from unittest.mock import Mock, patch, ANY
 
 
 class TestForms:

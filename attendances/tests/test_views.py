@@ -1,5 +1,7 @@
-from unittest.mock import Mock, patch, ANY
-from attendances.views import register, registered, registered_dates, courses, SUCCESS_MESSAGE
+from unittest.mock import ANY, Mock, patch
+
+from attendances.views import (SUCCESS_MESSAGE, courses, register, registered,
+                               registered_dates)
 
 
 class UnpackArgsRenderMixin:

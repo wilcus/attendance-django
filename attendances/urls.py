@@ -1,5 +1,6 @@
 from django.conf.urls import url
-from .views import register, registered, courses, registered_dates
+
+from .views import courses, register, registered, registered_dates
 
 urlpatterns = [
     url(r'^register/(\d+)$', register, name="register"),

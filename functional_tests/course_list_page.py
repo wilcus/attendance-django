@@ -1,4 +1,4 @@
-from page_objects import PageObject, MultiPageElement
+from page_objects import MultiPageElement, PageObject
 
 
 class CourseListPage(PageObject):

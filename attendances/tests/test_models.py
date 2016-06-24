@@ -1,8 +1,10 @@
-from attendances.models import Student, Course, Attendance
+import datetime
+
+import pytest
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-import datetime
-import pytest
+
+from attendances.models import Attendance, Course, Student
 
 User = get_user_model()
 

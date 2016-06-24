@@ -1,18 +1,21 @@
-from base import FunctionalTest
-from register_attendance_student_page import RegisterStudentPage
-from list_student_page import ListStudentPage
-from list_link_date_page import ListLinkDatePage
-from course_list_page import CourseListPage
-from login_page import LoginPage
-from attendances.views import SUCCESS_MESSAGE
-from django.test.utils import override_settings
-from attendances.models import Course, Student, Attendance
-from django.contrib.auth import get_user_model, SESSION_KEY, BACKEND_SESSION_KEY, HASH_SESSION_KEY
-from django.contrib.sessions.backends.db import SessionStore
-from django.conf.global_settings import SESSION_COOKIE_NAME
-from django.conf import settings
-from django.utils import timezone
 import datetime
+
+from django.conf import settings
+from django.conf.global_settings import SESSION_COOKIE_NAME
+from django.contrib.auth import (BACKEND_SESSION_KEY, HASH_SESSION_KEY,
+                                 SESSION_KEY, get_user_model)
+from django.contrib.sessions.backends.db import SessionStore
+from django.test.utils import override_settings
+from django.utils import timezone
+
+from attendances.models import Attendance, Course, Student
+from attendances.views import SUCCESS_MESSAGE
+from base import FunctionalTest
+from course_list_page import CourseListPage
+from list_link_date_page import ListLinkDatePage
+from list_student_page import ListStudentPage
+from login_page import LoginPage
+from register_attendance_student_page import RegisterStudentPage
 
 User = get_user_model()
 

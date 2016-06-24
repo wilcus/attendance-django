@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.contrib import messages
 from django.contrib.auth import get_user
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
+from django.shortcuts import render
+
 from .forms import RegisterStudentListForm
-from .models import Student, Course, Attendance
+from .models import Attendance, Course, Student
 
 SUCCESS_MESSAGE = "You saved succesfully the attendances"
 

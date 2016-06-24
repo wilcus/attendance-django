@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% if attendance_dates %}
+    <h3>Attendances by date for course {{course.name}}</h2>
+  {% endif %}
+  <ul class="date">
+    {% for attendance_date in attendance_dates %}
+      <li class="date--item">
+        <a href="{% url 'registered' course.pk attendance_date.date|date:"Y-m-d" %}">{{ attendance_date.date|date:"d F Y" }}</a>
+      </li>
+    {% empty %}
+      <li>No dates which have registered students</li>
+    {% endfor %}
+  </ul>
+{% endblock content %}

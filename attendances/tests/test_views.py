@@ -147,3 +147,11 @@ class TestRegisteredDates(UnpackArgsRenderMixin):
 
         template = self.template(mock_render.call_args)
         assert 'registered_dates.html' == template
+
+    def test_registered_dates_view_call_filter_attendance(self, mock_render, mock_get_user, mock_Attendance, mock_Course, rf):
+        request = rf.get('fake')
+        request.user = Mock()
+
+        registered_dates(request, ANY)
+
+        assert mock_Attendance.objects.filter.call_count == 1

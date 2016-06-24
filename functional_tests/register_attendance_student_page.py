@@ -7,6 +7,11 @@ class RegisterStudentPage(PageObject):
     submit_button = PageElement(css="input[type='submit']")
     success_message_element = PageElement(css=".info")
     finished_course_message_element = PageElement(css=".finished-course-message")
+    not_started_course_message_element = PageElement(css=".not-started-course-message")
+
+    @property
+    def not_started_course_message(self):
+        return self.not_started_course_message_element.text
 
     @property
     def finished_course_message(self):

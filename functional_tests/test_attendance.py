@@ -9,7 +9,7 @@ from django.test.utils import override_settings
 from django.utils import timezone
 
 from attendances.models import Attendance, Course, Student
-from attendances.views import SUCCESS_MESSAGE
+from attendances.views import SUCCESS_MESSAGE, FINISHED_COURSE_MESSAGE
 from base import FunctionalTest
 from course_list_page import CourseListPage
 from list_link_date_page import ListLinkDatePage
@@ -60,6 +60,29 @@ class AttendanceTest(FunctionalTest):
         list_student_page.get("/attendances/registered/{0}/{1:%Y-%m-%d}".format(course.pk, attendance.date))
         students_registered = list_student_page.students_registered
         self.assertIn(john.name, students_registered)
+
+    def test_cannot_register_students_when_the_course_is_finished(self):
+        # Given a database with students enrolled to courses
+        course = Course.objects.create(
+            name="maths",
+            start_date=timezone.now().date() - datetime.timedelta(days=2),
+            finish_date=timezone.now().date() - datetime.timedelta(days=1)
+        )
+        john = Student.objects.create(name="john")
+        students_of_course = [
+            john,
+            Student.objects.create(name="michael")
+        ]
+        course.students.add(*students_of_course)
+        professor = User.objects.create(username="george")
+        course.professors.add(professor)
+
+        self.create_preauthenticated_session_for(professor)
+        register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
+        register_student_page.get("/attendances/register/{0}".format(course.pk))
+        finished_course_message = register_student_page.finished_course_message
+
+        self.assertIn(finished_course_message, FINISHED_COURSE_MESSAGE)
 
     def test_see_list_of_link_of_dates_where_students_are_registered(self):
         # Given a database with students enrolled to courses

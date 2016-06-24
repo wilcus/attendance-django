@@ -1,5 +1,5 @@
-from attendances.views import register, registered, courses, SUCCESS_MESSAGE
 from unittest.mock import Mock, patch, ANY
+from attendances.views import register, registered, registered_dates, courses, SUCCESS_MESSAGE
 
 
 class UnpackArgsRenderMixin:
@@ -132,3 +132,18 @@ class TestCoursesView(UnpackArgsRenderMixin):
         courses(request)
 
         assert mock_Course.objects.filter.call_count == 1
+
+
+@patch('attendances.views.Course')
+@patch('attendances.views.Attendance')
+@patch('attendances.views.get_user')
+@patch('attendances.views.render')
+class TestRegisteredDates(UnpackArgsRenderMixin):
+    def test_registered_dates_view_use_the_correct_template(self, mock_render, mock_get_user, mock_Attendance, mock_Course, rf):
+        request = rf.get('fake')
+        request.user = Mock()
+
+        registered_dates(request, ANY)
+
+        template = self.template(mock_render.call_args)
+        assert 'registered_dates.html' == template

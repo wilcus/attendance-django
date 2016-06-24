@@ -155,3 +155,13 @@ class TestRegisteredDates(UnpackArgsRenderMixin):
         registered_dates(request, ANY)
 
         assert mock_Attendance.objects.filter.call_count == 1
+
+    def test_registered_dates_view_send_course(self, mock_render, mock_get_user, mock_Attendance, mock_Course, rf):
+        request = rf.get('fake')
+        request.user = Mock()
+        any_course = mock_Course.objects.get.return_value
+
+        registered_dates(request, ANY)
+
+        context = self.context(mock_render.call_args)
+        assert any_course == context['course']

@@ -3,7 +3,7 @@ from django.contrib.auth import get_user
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import RegisterStudentListForm
-from .models import Student, Course
+from .models import Student, Course, Attendance
 
 SUCCESS_MESSAGE = "You saved succesfully the attendances"
 
@@ -28,6 +28,13 @@ def registered(request, course_id, date):
         attendance__date=date
     )
     return render(request, 'registered.html', {'students': students})
+
+
+@login_required
+def registered_dates(request, course_id):
+    course = Course.objects.get(pk=course_id)
+    attendance_dates = Attendance.objects.filter(course_id=course_id, course__professors__in=[get_user(request)]).only('date').distinct().order_by('date')
+    return render(request, 'registered_dates.html', {'attendance_dates': attendance_dates, 'course': course})
 
 
 @login_required

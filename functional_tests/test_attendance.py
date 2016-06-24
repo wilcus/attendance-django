@@ -1,6 +1,7 @@
 from base import FunctionalTest
 from register_attendance_student_page import RegisterStudentPage
 from list_student_page import ListStudentPage
+from list_link_date_page import ListLinkDatePage
 from course_list_page import CourseListPage
 from login_page import LoginPage
 from attendances.views import SUCCESS_MESSAGE
@@ -56,6 +57,32 @@ class AttendanceTest(FunctionalTest):
         list_student_page.get("/attendances/registered/{0}/{1:%Y-%m-%d}".format(course.pk, attendance.date))
         students_registered = list_student_page.students_registered
         self.assertIn(john.name, students_registered)
+
+    def test_see_list_of_link_of_dates_where_students_are_registered(self):
+        # Given a database with students enrolled to courses
+        course = Course.objects.create(name="maths")
+        john = Student.objects.create(name="john")
+        students_of_course = [
+            john,
+            Student.objects.create(name="michael")
+        ]
+        course.students.add(*students_of_course)
+        professor = User.objects.create(username="george")
+        course.professors.add(professor)
+
+        self.create_preauthenticated_session_for(professor)
+
+        register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
+        register_student_page.get("/attendances/register/{0}".format(course.pk))
+        register_student_page.toggle_check(john.name)
+        register_student_page.submit_button.click()
+        list_link_date_page = ListLinkDatePage(self.browser, root_uri=self.live_server_url)
+
+        # I want to see the list of links
+        attendance = Attendance.objects.all()[0]
+        list_link_date_page.get("/attendances/registered-dates/{0}".format(course.pk))
+        dates = list_link_date_page.dates
+        self.assertIn("{0:%d %B %Y}".format(attendance.date), dates)
 
     def test_see_message_register_attendances_sucessfully(self):
         # Given a database with students enrolled to courses

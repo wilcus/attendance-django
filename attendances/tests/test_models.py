@@ -82,6 +82,16 @@ class TestAttendance:
         course.students.add(student)
         Attendance.objects.create(course_id=course.id, student=student)
 
+    def test_get_dates_from_a_course_and_professor(self):
+        student = Student.objects.create(name="John")
+        course = Course.objects.create(name="maths")
+        course.students.add(student)
+        professor = User.objects.create(username="Mark")
+        course.professors.add(professor)
+        Attendance.objects.create(course_id=course.id, student=student)
+        dates = Attendance.objects.filter(course_id=course.id, course__professors__in=[professor]).only('date').distinct().order_by('date')
+        assert dates.count() == 1
+
 
 @pytest.mark.django_db
 class TestCourse:

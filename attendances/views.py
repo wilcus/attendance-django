@@ -7,6 +7,7 @@ from .forms import RegisterStudentListForm
 from .models import Attendance, Course, Student
 
 SUCCESS_MESSAGE = "You saved succesfully the attendances"
+FINISHED_COURSE_MESSAGE = "This course is finished"
 
 
 @login_required

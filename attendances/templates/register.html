@@ -1,9 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <form action="{% url 'register' course_id %}" method="post">
-      {% csrf_token %}
-      {{ form }}
-      <input type="submit" value="Submit" />
-  </form>
+  {% if not FINISHED_COURSE_MESSAGE %}
+    <form action="{% url 'register' course_id %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit" />
+    </form>
+  {% else %}
+    <h3 class="finished-course-message">{{ FINISHED_COURSE_MESSAGE }}</h3>
+  {% endif %}
 {% endblock content %}

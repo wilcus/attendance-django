@@ -37,7 +37,11 @@ class AttendanceTest(FunctionalTest):
 
     def test_see_list_of_registered_students_from_a_course(self):
         # Given a database with students enrolled to courses
-        course = Course.objects.create(name="maths")
+        course = Course.objects.create(
+            name="maths",
+            start_date=timezone.now().date(),
+            finish_date=timezone.now().date(),
+        )
         john = Student.objects.create(name="john")
         students_of_course = [
             john,
@@ -86,7 +90,11 @@ class AttendanceTest(FunctionalTest):
 
     def test_see_list_of_link_of_dates_where_students_are_registered(self):
         # Given a database with students enrolled to courses
-        course = Course.objects.create(name="maths")
+        course = Course.objects.create(
+            name="maths",
+            start_date=timezone.now().date(),
+            finish_date=timezone.now().date(),
+        )
         john = Student.objects.create(name="john")
         students_of_course = [
             john,
@@ -112,7 +120,11 @@ class AttendanceTest(FunctionalTest):
 
     def test_see_message_register_attendances_sucessfully(self):
         # Given a database with students enrolled to courses
-        course = Course.objects.create(name="maths")
+        course = Course.objects.create(
+            name="maths",
+            start_date=timezone.now().date(),
+            finish_date=timezone.now().date(),
+        )
         john = Student.objects.create(name="john")
         students_of_course = [
             john,
@@ -131,7 +143,11 @@ class AttendanceTest(FunctionalTest):
 
     def test_see_list_of_registered_students_in_form(self):
         # Given a database with students enrolled to courses
-        course = Course.objects.create(name="maths")
+        course = Course.objects.create(
+            name="maths",
+            start_date=timezone.now().date(),
+            finish_date=timezone.now().date(),
+        )
         john = Student.objects.create(name="john")
         students_of_course = [
             john,
@@ -152,7 +168,11 @@ class AttendanceTest(FunctionalTest):
 
     def test_not_see_list_of_registered_students_in_form_if_student_was_registered_2_days_before(self):
         # Given a database with students enrolled to courses
-        course = Course.objects.create(name="maths")
+        course = Course.objects.create(
+            name="maths",
+            start_date=timezone.now().date(),
+            finish_date=timezone.now().date(),
+        )
         john = Student.objects.create(name="john")
         students_of_course = [
             john,
@@ -175,7 +195,11 @@ class AttendanceTest(FunctionalTest):
 
     def test_uncheck_student_in_form_should_not_appear_in_list_of_registered_students(self):
         # Given a database with students enrolled to courses
-        course = Course.objects.create(name="maths")
+        course = Course.objects.create(
+            name="maths",
+            start_date=timezone.now().date(),
+            finish_date=timezone.now().date(),
+        )
         john = Student.objects.create(name="john")
         students_of_course = [
             john,
@@ -199,7 +223,11 @@ class AttendanceTest(FunctionalTest):
 
     def test_when_logged_go_to_course_list_page(self):
         # create a professor with courses
-        course = Course.objects.create(name="maths")
+        course = Course.objects.create(
+            name="maths",
+            start_date=timezone.now().date(),
+            finish_date=timezone.now().date(),
+        )
         professor = User.objects.create(username="george")
         password = "superpass"
         professor.set_password(password)
@@ -218,15 +246,30 @@ class AttendanceTest(FunctionalTest):
         self.assertIn(course.name, course_list)
 
     def test_if_user_is_not_logged_and_want_register_page_go_to_login_page(self):
+        course = Course.objects.create(
+            name="maths",
+            start_date=timezone.now().date(),
+            finish_date=timezone.now().date(),
+        )
+
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
-        fake_course_id = 1
-        register_student_page.get("/attendances/register/{0}".format(fake_course_id))
+        register_student_page.get("/attendances/register/{0}".format(course.pk))
 
         self.assertEquals(len(self.browser.find_elements_by_id('id_username')), 1)
 
     def test_if_user_is_not_logged_and_want_registered_page_go_to_login_page(self):
+        course = Course.objects.create(
+            name="maths",
+            start_date=timezone.now().date(),
+            finish_date=timezone.now().date(),
+        )
+
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
-        fake_course_id = 1
-        register_student_page.get("/attendances/register/{0}".format(fake_course_id))
+        course = Course.objects.create(
+            name="maths",
+            start_date=timezone.now().date(),
+            finish_date=timezone.now().date(),
+        )
+        register_student_page.get("/attendances/register/{0}".format(course.pk))
 
         self.assertEquals(len(self.browser.find_elements_by_id('id_username')), 1)

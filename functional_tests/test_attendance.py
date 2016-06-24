@@ -46,7 +46,6 @@ class AttendanceTest(FunctionalTest):
         self.create_preauthenticated_session_for(professor)
 
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
-
         register_student_page.get("/attendances/register/{0}".format(course.pk))
         register_student_page.toggle_check(john.name)
         register_student_page.submit_button.click()

@@ -3,6 +3,7 @@ import datetime
 import pytest
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 from attendances.models import Attendance, Course, Student
 
@@ -17,8 +18,8 @@ class TestStudent:
     def test_get_courses_from_a_student(self):
         student = Student.objects.create(name="John")
         courses = [
-            Course.objects.create(name="science"),
-            Course.objects.create(name="maths")
+            Course.objects.create(name="science", start_date=timezone.now(), finish_date=timezone.now()),
+            Course.objects.create(name="maths", start_date=timezone.now(), finish_date=timezone.now())
         ]
         for course in courses:
             student.course_set.add(course)
@@ -27,7 +28,7 @@ class TestStudent:
     def test_get_students_from_a_professor_and_course(self):
         john = Student.objects.create(name="John")
         professor = User.objects.create(username="Mark")
-        course = Course.objects.create(name="science")
+        course = Course.objects.create(name="science", start_date=timezone.now(), finish_date=timezone.now())
         course.professors.add(professor)
         john.course_set.add(course)
         students = Student.objects.filter(
@@ -39,7 +40,7 @@ class TestStudent:
     def test_get_students_with_attendance(self):
         john = Student.objects.create(name="John")
         professor = User.objects.create(username="Mark")
-        course = Course.objects.create(name="science")
+        course = Course.objects.create(name="science", start_date=timezone.now(), finish_date=timezone.now())
         course.professors.add(professor)
         john.course_set.add(course)
         Attendance.objects.create(course=course, student=john)
@@ -49,7 +50,7 @@ class TestStudent:
     def test_get_students_with_attendance_in_a_date(self):
         john = Student.objects.create(name="John")
         professor = User.objects.create(username="Mark")
-        course = Course.objects.create(name="science")
+        course = Course.objects.create(name="science", start_date=timezone.now(), finish_date=timezone.now())
         course.professors.add(professor)
         john.course_set.add(course)
         attendance = Attendance.objects.create(course=course, student=john)
@@ -64,7 +65,7 @@ class TestStudent:
     def test_students_with_attendance_if_not_register_in_course(self):
         john = Student.objects.create(name="John")
         professor = User.objects.create(username="Mark")
-        course = Course.objects.create(name="science")
+        course = Course.objects.create(name="science", start_date=timezone.now(), finish_date=timezone.now())
         course.professors.add(professor)
         with pytest.raises(ValidationError):
             Attendance.objects.create(course=course, student=john)
@@ -74,19 +75,19 @@ class TestStudent:
 class TestAttendance:
     def test_get_create_attendance(self):
         student = Student.objects.create(name="John")
-        course = Course.objects.create(name="maths")
+        course = Course.objects.create(name="maths", start_date=timezone.now(), finish_date=timezone.now())
         course.students.add(student)
         Attendance.objects.create(student=student, course=course)
 
     def test_get_create_attendance_with_id(self):
         student = Student.objects.create(name="John")
-        course = Course.objects.create(name="maths")
+        course = Course.objects.create(name="maths", start_date=timezone.now(), finish_date=timezone.now())
         course.students.add(student)
         Attendance.objects.create(course_id=course.id, student=student)
 
     def test_get_dates_from_a_course_and_professor(self):
         student = Student.objects.create(name="John")
-        course = Course.objects.create(name="maths")
+        course = Course.objects.create(name="maths", start_date=timezone.now(), finish_date=timezone.now())
         course.students.add(student)
         professor = User.objects.create(username="Mark")
         course.professors.add(professor)
@@ -98,7 +99,7 @@ class TestAttendance:
 @pytest.mark.django_db
 class TestCourse:
     def test_get_students_from_a_course(self):
-        course = Course.objects.create(name="music")
+        course = Course.objects.create(name="music", start_date=timezone.now(), finish_date=timezone.now())
         students_of_course = [
             Student.objects.create(name="john"),
             Student.objects.create(name="michael")
@@ -107,7 +108,7 @@ class TestCourse:
         assert course.students.all().count() == len(students_of_course)
 
     def test_get_proffessor_from_a_course(self):
-        course = Course.objects.create(name="music")
+        course = Course.objects.create(name="music", start_date=timezone.now(), finish_date=timezone.now())
         students_of_course = [
             Student.objects.create(name="john"),
             Student.objects.create(name="michael")

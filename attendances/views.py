@@ -41,12 +41,14 @@ def register(request, course_id):
 
 @login_required
 def registered(request, course_id, date):
+    course = Course.objects.get(pk=course_id)
     students = Student.objects.filter(
         attendance__course__id=course_id,
         attendance__course__professors__in=[get_user(request)],
         attendance__date=date
     )
-    return render(request, 'registered.html', {'students': students})
+    date_ = timezone.datetime.strptime(date, "%Y-%m-%d").date()
+    return render(request, 'registered.html', {'students': students, 'course': course, 'date_': date_})
 
 
 @login_required

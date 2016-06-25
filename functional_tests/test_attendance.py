@@ -54,14 +54,14 @@ class AttendanceTest(FunctionalTest):
         self.create_preauthenticated_session_for(professor)
 
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
-        register_student_page.get("/attendances/register/{0}".format(course.pk))
+        register_student_page.get("/register/{0}".format(course.pk))
         register_student_page.toggle_check(john.name)
         register_student_page.submit_button.click()
         list_student_page = ListStudentPage(self.browser, root_uri=self.live_server_url)
 
         # I want to see the list of my students
         attendance = Attendance.objects.all()[0]
-        list_student_page.get("/attendances/registered/{0}/{1:%Y-%m-%d}".format(course.pk, attendance.date))
+        list_student_page.get("/registered/{0}/{1:%Y-%m-%d}".format(course.pk, attendance.date))
         students_registered = list_student_page.students_registered
         self.assertIn(john.name, students_registered)
 
@@ -83,7 +83,7 @@ class AttendanceTest(FunctionalTest):
 
         self.create_preauthenticated_session_for(professor)
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
-        register_student_page.get("/attendances/register/{0}".format(course.pk))
+        register_student_page.get("/register/{0}".format(course.pk))
         finished_course_message = register_student_page.finished_course_message
 
         self.assertIn(finished_course_message, FINISHED_COURSE_MESSAGE)
@@ -106,7 +106,7 @@ class AttendanceTest(FunctionalTest):
 
         self.create_preauthenticated_session_for(professor)
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
-        register_student_page.get("/attendances/register/{0}".format(course.pk))
+        register_student_page.get("/register/{0}".format(course.pk))
         not_started_course_message = register_student_page.not_started_course_message
 
         self.assertIn(not_started_course_message, NOT_STARTED_COURSE_MESSAGE)
@@ -130,14 +130,14 @@ class AttendanceTest(FunctionalTest):
         self.create_preauthenticated_session_for(professor)
 
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
-        register_student_page.get("/attendances/register/{0}".format(course.pk))
+        register_student_page.get("/register/{0}".format(course.pk))
         register_student_page.toggle_check(john.name)
         register_student_page.submit_button.click()
         list_link_date_page = ListLinkDatePage(self.browser, root_uri=self.live_server_url)
 
         # I want to see the list of links
         attendance = Attendance.objects.all()[0]
-        list_link_date_page.get("/attendances/registered-dates/{0}".format(course.pk))
+        list_link_date_page.get("/registered-dates/{0}".format(course.pk))
         dates = list_link_date_page.dates
         self.assertIn("{0:%d %B %Y}".format(attendance.date), dates)
 
@@ -159,7 +159,7 @@ class AttendanceTest(FunctionalTest):
 
         self.create_preauthenticated_session_for(professor)
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
-        register_student_page.get("/attendances/register/{0}".format(course.pk))
+        register_student_page.get("/register/{0}".format(course.pk))
         register_student_page.toggle_check(john.name)
         register_student_page.submit_button.click()
         self.assertEquals(register_student_page.success_message, SUCCESS_MESSAGE)
@@ -185,7 +185,7 @@ class AttendanceTest(FunctionalTest):
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
 
         # I want to see john student is checked in form
-        register_student_page.get("/attendances/register/{0}".format(course.pk))
+        register_student_page.get("/register/{0}".format(course.pk))
         checked_students = register_student_page.checked_students
         self.assertIn(john.name, checked_students)
 
@@ -212,7 +212,7 @@ class AttendanceTest(FunctionalTest):
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
 
         # I don't want to see john student is checked in form
-        register_student_page.get("/attendances/register/{0}".format(course.pk))
+        register_student_page.get("/register/{0}".format(course.pk))
         checked_students = register_student_page.checked_students
         self.assertNotIn(john.name, checked_students)
 
@@ -235,12 +235,12 @@ class AttendanceTest(FunctionalTest):
 
         self.create_preauthenticated_session_for(professor)
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
-        register_student_page.get("/attendances/register/{0}".format(course.pk))
+        register_student_page.get("/register/{0}".format(course.pk))
         register_student_page.toggle_check(john.name)
         register_student_page.submit_button.click()
         list_student_page = ListStudentPage(self.browser, root_uri=self.live_server_url)
 
-        list_student_page.get("/attendances/registered/{0}/{1:%Y-%m-%d}".format(course.pk, attendance.date))
+        list_student_page.get("/registered/{0}/{1:%Y-%m-%d}".format(course.pk, attendance.date))
         students_registered = list_student_page.students_registered
         self.assertNotIn(john.name, students_registered)
 
@@ -276,7 +276,7 @@ class AttendanceTest(FunctionalTest):
         )
 
         register_student_page = RegisterStudentPage(self.browser, root_uri=self.live_server_url)
-        register_student_page.get("/attendances/register/{0}".format(course.pk))
+        register_student_page.get("/register/{0}".format(course.pk))
 
         self.assertEquals(len(self.browser.find_elements_by_id('id_username')), 1)
 
@@ -293,6 +293,6 @@ class AttendanceTest(FunctionalTest):
             start_date=timezone.now().date(),
             finish_date=timezone.now().date(),
         )
-        register_student_page.get("/attendances/register/{0}".format(course.pk))
+        register_student_page.get("/register/{0}".format(course.pk))
 
         self.assertEquals(len(self.browser.find_elements_by_id('id_username')), 1)

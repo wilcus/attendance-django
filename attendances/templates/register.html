@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block content %}
   {% if FINISHED_COURSE_MESSAGE or NOT_STARTED_COURSE_MESSAGE %}
@@ -12,10 +13,17 @@
     {% endif %}
 
   {% else %}
-    <form action="{% url 'register' course_id %}" method="post">
+    <header>
+      <p>
+        <strong>{{ course.name }}</strong>
+        {% now "Y-m-d" as current_date %}
+        <a href="{% url 'registered' course.pk current_date  %}">(See today registered attendances of this course)</a>
+      </p>
+    <header>
+    <form action="{% url 'register' course.pk %}" method="post">
         {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Submit" />
+        {{ form|crispy }}
+        <input type="submit" class="btn btn-default" value="Submit" />
     </form>
   {% endif %}
 {% endblock content %}

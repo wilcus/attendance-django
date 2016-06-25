@@ -1,13 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
+  {% if courses %}
+    <p>Your Courses:</p>
+  {% endif %}
   <ul class="courses">
     {% for course in courses %}
-		<li>
-			<a href="{% url 'register' course.pk %}">{{ course.name }}</a>
-		</li>
-	{% empty %}
-		<li>You have no courses</li>
+      <li>
+        <a href="{% url 'register' course.pk %}"><strong>{{ course.name }}</strong></a>
+        <a href="{% url 'registered-dates' course.pk %}"><em>(See historical attendances of this course)</em></a>
+      </li>
+    {% empty %}
+      <li>You have no courses</li>
     {% endfor %}
   </ul>
 {% endblock content %}

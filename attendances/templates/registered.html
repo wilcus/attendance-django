@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
+  <h3>Students of {{ course.name }} on {{ date_|date:"d F Y" }}</h3>
   <ul class="registered">
     {% for student in students %}
-		<li class="registered--item">{{ student.name }}</li>
-	{% empty %}
-		<li>No students registered</li>
+      <li class="registered--item">{{ student.name }}</li>
+    {% empty %}
+      <li>No students registered</li>
     {% endfor %}
   </ul>
 {% endblock content %}

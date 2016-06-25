@@ -28,14 +28,15 @@ def course_active(function):
 @course_active
 @login_required
 def register(request, course_id):
+    course = Course.objects.get(pk=course_id)
     student_list_form = RegisterStudentListForm(course_id=course_id, professor=get_user(request))
     if request.method == 'POST':
         student_list_form = RegisterStudentListForm(course_id=course_id, professor=get_user(request), data=request.POST)
         if student_list_form.is_valid():
             student_list_form.save()
             messages.info(request, SUCCESS_MESSAGE)
-        return render(request, 'register.html', {'course_id': course_id, 'form': student_list_form})
-    return render(request, 'register.html', {'course_id': course_id, 'form': student_list_form})
+        return render(request, 'register.html', {'course': course, 'form': student_list_form})
+    return render(request, 'register.html', {'course': course, 'form': student_list_form})
 
 
 @login_required

@@ -17,6 +17,9 @@ class Course(models.Model):
     start_date = models.DateField()
     finish_date = models.DateField()
 
+    def __str__(self):
+        return self.name
+
 
 class Attendance(models.Model):
     course = models.ForeignKey(Course)

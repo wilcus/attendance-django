@@ -135,20 +135,24 @@ class TestRegisterPage(UnpackArgsRenderMixin):
         mock_messages.info.assert_called_with(request, SUCCESS_MESSAGE)
 
 
+@patch('attendances.views.timezone')
+@patch('attendances.views.Course')
 @patch('attendances.views.get_user')
 @patch('attendances.views.Student')
 class TestRegisteredPage(UnpackArgsRenderMixin):
-    def test_registered_output_registered_students(self, mock_Student, mock_get_user, rf):
+    def test_registered_output_registered_students(self, mock_Student, mock_get_user, mock_Course, mock_timezone, rf):
         request = rf.get('fake')
         request.user = Mock()
         mock_get_user.return_value = ANY
+        mock_date = mock_timezone.datetime.strptime.return_value
+        mock_date.date.return_value = ANY
 
         registered(request, ANY, ANY)
 
         assert mock_Student.objects.filter.call_count == 1
 
     @patch('attendances.views.render')
-    def test_registered_use_registered_template(self, mock_render, mock_Student, mock_get_user, rf):
+    def test_registered_use_registered_template(self, mock_render, mock_Student, mock_get_user, mock_Course, mock_timezone, rf):
         request = rf.get('fake')
         request.user = Mock()
         mock_get_user.return_value = ANY

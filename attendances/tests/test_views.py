@@ -31,6 +31,7 @@ class TestRegisterPage(UnpackArgsRenderMixin):
         mock_student_list_form = mock_StudentListForm.return_value
         mock_course = mock_Course.objects.get.return_value
         mock_course.finish_date = timezone.now().date()
+        mock_course.start_date = timezone.now().date()
 
         register(request, ANY)
 
@@ -43,6 +44,7 @@ class TestRegisterPage(UnpackArgsRenderMixin):
         mock_get_user.return_value = ANY
         mock_course = mock_Course.objects.get.return_value
         mock_course.finish_date = timezone.now().date() - datetime.timedelta(days=2)
+        mock_course.start_date = timezone.now().date() - datetime.timedelta(days=2)
 
         register(request, ANY)
 
@@ -69,6 +71,7 @@ class TestRegisterPage(UnpackArgsRenderMixin):
         course_id = 1
         mock_course = mock_Course.objects.get.return_value
         mock_course.finish_date = timezone.now().date()
+        mock_course.start_date = timezone.now().date()
 
         register(request, course_id)
 
@@ -81,6 +84,7 @@ class TestRegisterPage(UnpackArgsRenderMixin):
         request.user = Mock()
         mock_course = mock_Course.objects.get.return_value
         mock_course.finish_date = timezone.now().date()
+        mock_course.start_date = timezone.now().date()
 
         register(request, ANY)
 
@@ -96,6 +100,7 @@ class TestRegisterPage(UnpackArgsRenderMixin):
         mock_student_list_form.is_valid.return_value = True
         mock_course = mock_Course.objects.get.return_value
         mock_course.finish_date = timezone.now().date()
+        mock_course.start_date = timezone.now().date()
 
         register(request, ANY)
 
@@ -109,6 +114,7 @@ class TestRegisterPage(UnpackArgsRenderMixin):
         mock_student_list_form.is_valid.return_value = False
         mock_course = mock_Course.objects.get.return_value
         mock_course.finish_date = timezone.now().date()
+        mock_course.start_date = timezone.now().date()
 
         register(request, ANY)
 
@@ -123,6 +129,7 @@ class TestRegisterPage(UnpackArgsRenderMixin):
         mock_student_list_form.is_valid.return_value = True
         mock_course = mock_Course.objects.get.return_value
         mock_course.finish_date = timezone.now().date()
+        mock_course.start_date = timezone.now().date()
 
         register(request, ANY)
 

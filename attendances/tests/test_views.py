@@ -64,19 +64,18 @@ class TestRegisterPage(UnpackArgsRenderMixin):
         context = self.context(mock_render.call_args)
         assert NOT_STARTED_COURSE_MESSAGE == context['NOT_STARTED_COURSE_MESSAGE']
 
-    def test_register_sends_course_id(self, mock_render, mock_StudentListForm, mock_get_user, mock_Course, rf):
+    def test_register_sends_course(self, mock_render, mock_StudentListForm, mock_get_user, mock_Course, rf):
         request = rf.get('fake')
         request.user = Mock()
         mock_get_user.return_value = ANY
-        course_id = 1
         mock_course = mock_Course.objects.get.return_value
         mock_course.finish_date = timezone.now().date()
         mock_course.start_date = timezone.now().date()
 
-        register(request, course_id)
+        register(request, ANY)
 
         context = self.context(mock_render.call_args)
-        assert course_id == context['course_id']
+        assert mock_course == context['course']
 
     def test_register_page_use_register_template(self, mock_render, mock_StudentListForm, mock_get_user, mock_Course, rf):
         request = rf.get('fake')

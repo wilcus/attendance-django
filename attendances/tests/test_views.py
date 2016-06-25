@@ -3,8 +3,8 @@ import datetime
 from django.utils import timezone
 from unittest.mock import ANY, Mock, patch
 
-from attendances.views import (SUCCESS_MESSAGE, FINISHED_COURSE_MESSAGE, courses, register, registered,
-                               registered_dates)
+from attendances.views import (SUCCESS_MESSAGE, FINISHED_COURSE_MESSAGE, NOT_STARTED_COURSE_MESSAGE,
+                               courses, register, registered, registered_dates)
 
 
 class UnpackArgsRenderMixin:
@@ -48,6 +48,19 @@ class TestRegisterPage(UnpackArgsRenderMixin):
 
         context = self.context(mock_render.call_args)
         assert FINISHED_COURSE_MESSAGE == context['FINISHED_COURSE_MESSAGE']
+
+    def test_register_sends_message_if_the_courses_is_not_started(self, mock_render, mock_StudentListForm, mock_get_user, mock_Course, rf):
+        request = rf.get('fake')
+        request.user = Mock()
+        mock_get_user.return_value = ANY
+        mock_course = mock_Course.objects.get.return_value
+        mock_course.finish_date = timezone.now().date() + datetime.timedelta(days=1)
+        mock_course.start_date = timezone.now().date() + datetime.timedelta(days=1)
+
+        register(request, ANY)
+
+        context = self.context(mock_render.call_args)
+        assert NOT_STARTED_COURSE_MESSAGE == context['NOT_STARTED_COURSE_MESSAGE']
 
     def test_register_sends_course_id(self, mock_render, mock_StudentListForm, mock_get_user, mock_Course, rf):
         request = rf.get('fake')

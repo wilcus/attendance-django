@@ -15,10 +15,13 @@ NOT_STARTED_COURSE_MESSAGE = "This course is not started"
 def course_active(function):
     def wrapper(request, course_id):
         course = Course.objects.get(pk=course_id)
-        if course.finish_date >= timezone.now().date():
-            return function(request, course_id)
+        if course.start_date > timezone.now().date() or course.finish_date < timezone.now().date():
+            if course.start_date > timezone.now().date():
+                return render(request, 'register.html', {'NOT_STARTED_COURSE_MESSAGE': NOT_STARTED_COURSE_MESSAGE})
+            else:
+                return render(request, 'register.html', {'FINISHED_COURSE_MESSAGE': FINISHED_COURSE_MESSAGE})
         else:
-            return render(request, 'register.html', {'FINISHED_COURSE_MESSAGE': FINISHED_COURSE_MESSAGE})
+            return function(request, course_id)
     return wrapper
 
 

@@ -90,3 +90,4 @@ ENV/
 
 *.sqlite3
 session.vim
+attendance/static/bower_components
